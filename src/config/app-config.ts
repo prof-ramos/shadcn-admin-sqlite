@@ -3,12 +3,12 @@ import packageJson from "../../package.json";
 const currentYear = new Date().getFullYear();
 
 export const APP_CONFIG = {
-  name: "Studio Admin",
+  name: "Edital TCDF",
   version: packageJson.version,
   copyright: `© ${currentYear}, Studio Admin.`,
   meta: {
-    title: "Studio Admin: Open Source Admin Dashboard with shadcn/ui",
+    title: "Edital TCDF · Acompanhamento de estudos",
     description:
-      "A polished open source shadcn/ui admin dashboard with 25+ screens and editions for Radix UI, Base UI, React Aria, and TanStack Start.",
+      "Edital verticalizado com progresso por matéria e marcações de estudo salvas em SQLite.",
   },
 };

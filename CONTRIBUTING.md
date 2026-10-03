@@ -1,127 +1,27 @@
-# Contributing to Studio Admin
+# Contribuindo com Edital TCDF
 
-Thanks for showing interest in improving **Studio Admin** (repo: `next-shadcn-admin-dashboard`).  
-This guide will help you set up your environment and understand how to contribute.
+Este fork mantém a estrutura colocalizada do Studio Admin e usa React 19, TypeScript, Tailwind v4, Shadcn, Vinext e Cloudflare D1/SQLite. Leia o README para executar localmente e para os requisitos de autenticação de produção.
 
----
+## Fluxo
 
-## Overview
+1. Crie uma branch a partir da `main` atual.
+2. Instale com `npm ci`, compile, aplique as migrations locais e execute `npm run dev`.
+3. Mantenha a V1 focada em dashboard e edital verticalizado. Não invente métricas, perfis ou conteúdo programático.
+4. Preserve os componentes em `src/components/ui/` e `src/components/calendar/`; componha no local de uso.
+5. Rode `npm run check:types`, `npm run test:catalog`, `npm run build` e `npm run db:migrate` conforme as mudanças.
+6. Abra um PR em rascunho, descrevendo mudanças, testes e limites. Inclua capturas de desktop/mobile quando conseguir verificá-las.
 
-This project is built with **Next.js 16**, **TypeScript**, **Tailwind CSS v4**, and **Shadcn UI**.  
-The goal is to keep the codebase modular, scalable, and easy to extend.
+Husky executa checagem TypeScript, testes de catálogo e regressão dos checkboxes antes de commits locais. A instalação usa `prepare`; em automações que deliberadamente não precisam de hooks, use `HUSKY=0`. Os checks de CI são independentes dos hooks.
 
----
+## Organização
 
-## Project Layout
+- `src/app/(main)/dashboard/edital/`: shell, dashboard de estudos, página de matéria e estados do cliente.
+- `src/lib/study/`: JSON integral fornecido, tipos e cálculo hierárquico.
+- `src/app/api/study/progress/`: leitura e atualização privada do progresso.
+- `db/schema.ts` e `drizzle/`: esquema e migrations incrementais.
+- `build/`: adapter Worker e helper de autenticação somente para desenvolvimento local.
+- `.openai/hosting.example.json`: bindings lógicos sem identidade de hospedagem. O arquivo real `hosting.json` é local e ignorado.
 
-We use a **colocation-based file system**. Each feature keeps its own pages, components, and logic.
+Não commite bancos, dados de usuários, arquivos `.env`, credenciais, IDs de hospedagem, `.wrangler`, `.sites-runtime`, builds ou `node_modules`. Não reescreva migrations aplicadas nem altere dados antigos para preencher exemplos.
 
-```
-src
-├── app               # Next.js routes (App Router)
-│   ├── (auth)        # Auth layouts & screens
-│   ├── (main)        # Main dashboard routes
-│   │   └── (dashboard)
-│   │       ├── crm
-│   │       ├── finance
-│   │       ├── default
-│   │       └── ...
-│   └── layout.tsx
-├── components        # Shared UI components
-├── hooks             # Reusable hooks
-├── lib               # Config & utilities
-├── styles            # Tailwind / theme setup
-└── types             # TypeScript definitions
-```
-
-If you’d like a more detailed example of this setup, check out the [Next Colocation Template](https://github.com/arhamkhnz/next-colocation-template), where the full structure is explained with examples.
-
----
-
-## Getting Started
-
-### Fork and Clone the Repository
-
-1. Fork the Repository
-   
-   Click [here](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/fork) to fork the repository.
-
-2. Clone the Repository  
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/next-shadcn-admin-dashboard.git
-   ```
-   
-3. Navigate into the Project  
-   ```bash
-   cd next-shadcn-admin-dashboard
-   ```
-
-4. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-5. **Run the dev server**
-   ```bash
-   npm run dev
-   ```
-   App will be available at [http://localhost:3000](http://localhost:3000).
-
----
-
-## Contribution Flow
-
-- Always create a new branch before working on changes:
-  ```bash
-  git checkout -b feature/my-update
-  ```
-
-- Use clear commit messages:
-  ```bash
-  git commit -m "feat: add finance dashboard screen"
-  ```
-
-- Open a Pull Request once ready.
-- If your change adds a new UI screen or component, include a screenshot in your PR description.
-
----
-
-## Where to Contribute
-
-- **External Pages**: Landing pages or other non-dashboard routes → `src/app/(external)/`  
-- **Auth Screens**: Login, register, and authentication layouts → `src/app/(main)/auth/`  
-- **Dashboard Screens**: Feature dashboards like CRM, Finance, Analytics → `src/app/(main)/dashboard/`
-- **Components**: Reusable UI goes in `src/components/`  
-- **Hooks**: Custom logic goes in `src/hooks/`  
-- **Themes**: New presets under `src/styles/presets/`  
-
----
-
-## Guidelines
-
-- Prefer **TypeScript types** over `any`
-- Husky pre-commit hooks are enabled - linting and formatting run automatically when you commit, and if there are errors the commit will be blocked until they are fixed. 
-- Follow **Shadcn UI** style & Tailwind v4 conventions
-- Keep accessibility in mind (ARIA, keyboard nav)
-- Use clear commit messages with conventional prefixes (`feat:`, `fix:`, `chore:`, etc.)
-- Avoid unnecessary dependencies — prefer existing utilities where possible
-
----
-
-## Submitting PRs
-
-- Open a Pull Request once your changes are ready.  
-- Ensure your branch is up to date with `main` before submitting.  
-- Reference any related issue in your PR for context.
-
----
-
-## Questions & Support
-
-- Report bugs, suggestions, or issues via [GitHub Issues](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/issues)
-
----
-
-Your contributions keep this project growing. 🚀
-
-**Happy Vibe Coding!**
+Mantenha strings, numeração e notas do JSON fornecido. Uma atualização de conteúdo precisa de fonte explícita; não corrija silenciosamente redações legais ou acrescente tópicos não enviados. O material desta versão não foi conferido de forma independente com o edital oficial.

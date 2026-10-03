@@ -23,7 +23,7 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { SupportCard } from "./support-card";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & {user:{name:string;email:string}}) {
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
     useShallow((s) => ({
       sidebarVariant: s.values.sidebar_variant,
@@ -53,8 +53,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={sidebarItems} />
       </SidebarContent>
       <SidebarFooter>
-        <SupportCard />
-        <NavUser user={rootUser} />
+        <div className="px-2 py-2 text-xs text-muted-foreground"><a href="https://github.com/prof-ramos/shadcn-admin-sqlite" target="_blank" rel="noreferrer" className="underline underline-offset-4">Template original · MIT</a></div>
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

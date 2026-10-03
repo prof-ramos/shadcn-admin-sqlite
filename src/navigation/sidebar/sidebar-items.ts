@@ -63,14 +63,19 @@ export interface NavGroup {
 }
 
 export const sidebarItems: NavGroup[] = [
+{ id: 0, label: "Meu espaço · SQLite", items: [
+{id:"workspace-home",title:"Painel",url:"/dashboard/default",icon:LayoutDashboard},
+{id:"workspace-tasks",title:"Tarefas",url:"/dashboard/tasks",icon:CheckSquare},
+{id:"workspace-users",title:"Usuários",url:"/dashboard/users",icon:Users}
+]},
   {
     id: 1,
-    label: "Dashboards",
+    label: "Dashboards · demonstração",
     items: [
       {
         id: "default",
         title: "Default",
-        url: "/dashboard/default",
+        url: "/dashboard/overview-demo",
         icon: LayoutDashboard,
       },
       {

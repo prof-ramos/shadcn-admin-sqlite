@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1790991515488,
+      "tag": "0000_curious_kitty_pryde",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790991842520,
+      "tag": "0001_quiet_skreet",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790994631565,
+      "tag": "0002_famous_senator_kelly",
+      "breakpoints": true
+    }
+  ]
+}
