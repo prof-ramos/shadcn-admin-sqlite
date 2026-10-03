@@ -20,14 +20,8 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-function onSubmit(data: z.infer<typeof formSchema>) {
-  toast("You submitted the following values", {
-    description: (
-      <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    ),
-  });
+function onSubmit() {
+  toast("Demonstração visual: nenhum login ou cadastro foi realizado.");
 }
 
 export function RegisterForm() {
@@ -42,6 +36,7 @@ export function RegisterForm() {
 
   return (
     <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <p className="rounded-lg border p-3 text-sm text-muted-foreground">Demonstração do template. Não use senhas reais. O acesso deste site é feito pela sua conta ChatGPT.</p>
       <FieldGroup className="gap-4">
         <Controller
           control={form.control}

@@ -1,146 +1,70 @@
-# Next.js Admin Template with TypeScript & Shadcn UI
+# Edital TCDF · SQLite
 
-**Studio Admin** - Includes multiple dashboards, authentication layouts, customizable theme presets, and more.
+Aplicação de acompanhamento de estudos baseada no Studio Admin/Shadcn e na especificação visual fornecida. O conteúdo é o edital verticalizado enviado pelo usuário: 16 matérias, 3 seções, 298 nós e 234 itens-folha.
 
-<img src="https://github.com/arhamkhnz/next-shadcn-admin-dashboard/blob/main/media/dashboard.png?version=5" alt="Dashboard Screenshot">
+## O que funciona
 
-Most admin templates I found, free or paid, felt cluttered, outdated, or too rigid. I built this as a cleaner alternative with features often missing in others, such as theme toggling and layout controls, while keeping the design modern, minimal, and flexible.
+- Dashboard com progresso geral e por matéria, agrupado por seção.
+- Árvore de tópicos, checkboxes de pais e filhos e estado indeterminado.
+- Marcar um tópico-pai altera seus itens-folha em uma transação; pais não entram duas vezes nos percentuais.
+- Progresso persistido em SQLite, isolado pelo identificador autenticado do usuário.
+- Layout responsivo, drawer no celular/tablet, seletor de matéria e tipografia Inter local.
+- Questões e Simulados e Discursivas aparecem como “Em breve”, sem ações falsas.
+- Os módulos anteriores de tarefas e usuários continuam em `/dashboard/tasks` e `/dashboard/users`. Seus dados não são apagados. As demonstrações antigas redirecionam para o dashboard de estudos.
 
-> **View demo:** [studio admin](https://studio-admin.arhamkhnz.com)
+## Executar localmente
 
-> [!NOTE]
-> Looking for the Base UI version? Check out [next-shadcn-admin-dashboard-baseui](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui).
->
-> Looking for the React Aria version? Check out [arhamkhnz/next-shadcn-admin-dashboard-aria](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-aria).
->
-> Looking for the TanStack Start version? Check out [tanstack-shadcn-admin-dashboard](https://github.com/arhamkhnz/tanstack-shadcn-admin-dashboard).
+Requisitos: Node.js 24 LTS e npm. Nenhuma chave de API ou conta Cloudflare é necessária para desenvolvimento local.
 
-> [!TIP]
-> I’m also working on Nuxt.js and Svelte versions of this dashboard. They’ll be live soon.
-
-## Features
-
-- Built with Next.js 16, TypeScript, Tailwind CSS v4, and Shadcn UI  
-- Responsive and mobile-friendly  
-- Customizable theme presets (light/dark modes with color schemes like Tangerine, Brutalist, and more)  
-- Flexible layouts (collapsible sidebar, variable content widths)  
-- Authentication flows and screens  
-- Prebuilt dashboards (Default, CRM, Finance, Analytics, Productivity) plus legacy variants  
-- Role-Based Access Control (RBAC) with config-driven UI and multi-tenant support *(planned)*  
-
-> [!NOTE]
-> The default dashboard uses the **shadcn neutral** theme.  
-> It also includes additional color presets inspired by [Tweakcn](https://tweakcn.com):  
->
-> - Tangerine  
-> - Neo Brutalism  
-> - Soft Pop  
->
-> You can create more presets by following the same structure as the existing ones.
-
-> Looking for the **Next.js 15** version?  
-> Check out the [`archive/next15`](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/tree/archive/next15) branch.  
-> This branch contains the setup prior to upgrading to Next 16 and the React Compiler.
-
-> Looking for the **Next.js 14 + Tailwind CSS v3** version?  
-> Check out the [`archive/next14-tailwindv3`](https://github.com/arhamkhnz/next-shadcn-admin-dashboard/tree/archive/next14-tailwindv3) branch.  
-> It has a different color theme and is not actively maintained, but I try to keep it updated with major changes.  
-
-## Tech Stack
-
-- **Framework**: Next.js 16 (App Router), TypeScript, Tailwind CSS v4  
-- **UI Components**: Shadcn UI  
-- **Validation**: Zod  
-- **Forms & State Management**: React Hook Form, Zustand  
-- **Tables & Data Handling**: TanStack Table  
-- **Tooling & DX**: Biome, Husky  
-
-## Screens
-
-### Available
-- Default Dashboard  
-- CRM Dashboard  
-- Finance Dashboard  
-- Analytics Dashboard  
-- Productivity Dashboard  
-- E-commerce Dashboard  
-- Academy Dashboard  
-- Logistics Dashboard  
-- Infrastructure Dashboard  
-- File Manager  
-- Patient Monitoring  
-- Chat Page  
-- Email Page  
-- Profile  
-- Users Management  
-- Roles Management  
-- Kanban Board  
-- Tasks Page  
-- Invoice Page  
-- Calendar Page  
-- Authentication (4 screens)  
-- Legacy: Default v1, CRM v1, Finance v1, Analytics v1
-
-### Planned
-I’ve added all the planned screens. Feel free to open an issue for requesting something specific.
-
-## Colocation File System Architecture
-
-This project follows a **colocation-based architecture** each feature keeps its own pages, components, and logic inside its route folder.  
-Shared UI, hooks, and configuration live at the top level, making the codebase modular, scalable, and easier to maintain as the app grows.
-
-For a full breakdown of the structure with examples, see the [Next Colocation Template](https://github.com/arhamkhnz/next-colocation-template).
-
-## Getting Started
-
-You can run this project locally, or deploy it instantly with Vercel.
-
-### Deploy with Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farhamkhnz%2Fnext-shadcn-admin-dashboard)
-
-_Deploy your own copy with one click._
-
-### Run locally
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/arhamkhnz/next-shadcn-admin-dashboard.git
-   ```
-   
-2. **Navigate into the project**
-   ```bash
-    cd next-shadcn-admin-dashboard
-   ```
-   
-3. **Install dependencies**
-   ```bash
-    npm install
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-Your app will be running at [http://localhost:3000](http://localhost:3000)
-
-### Formatting and Linting
-
-Format, lint, and organize imports
-```bash
-npx @biomejs/biome check --write
+```sh
+npm ci
+npm run build
+npm run db:migrate
+npm run dev
 ```
-> For more information on available rules, fixes, and CLI options, refer to the [Biome documentation](https://biomejs.dev/).
 
----
+Abra `http://localhost:5173/signin-with-chatgpt?return_to=/dashboard/default`. No desenvolvimento, o helper de autenticação funciona **somente em loopback** e usa uma conta fictícia local de teste (`local_seedy`). Essa simulação não entra no build de produção. O primeiro `npm ci` cria `.openai/hosting.json` a partir do exemplo de bindings, sem identificar nenhum Site real.
 
-> [!IMPORTANT]  
-> This project is updated frequently. If you’re working from a fork or an older clone, pull the latest changes before syncing. Some updates may include breaking changes.
+O SQLite local fica em `.wrangler/state/`, fora do Git. Encerrar e reabrir o servidor preserva as marcações. `npm run db:migrate` registra as migrations aplicadas e pode ser repetido com segurança. Não remova essa pasta se quiser manter os dados locais.
 
----
+`npm start` inicia uma prévia do Worker compilado; ela não emula login. Use `npm run dev` para o fluxo local completo de navegador.
 
-Contributions are welcome. Feel free to open issues, feature requests, or start a discussion.
+## Adaptação de runtime e hospedagem
 
+Esta versão mantém a estrutura de rotas e componentes Next/App Router, mas usa **Vinext + Cloudflare Workers** para executar o mesmo aplicativo do Site. Isso substitui os comandos `next dev/build` do template original; não é um export estático nem uma aplicação Node com `better-sqlite3`.
 
-**Happy Vibe Coding!**
+A persistência usa a API **D1**, que executa SQLite. Localmente, Miniflare mantém o arquivo SQLite; na hospedagem, um binding D1 chamado `DB` fornece o armazenamento durável. O UUID em `wrangler.local.json` é um placeholder de desenvolvimento, não um recurso remoto. Nenhum ID de Site, credencial, banco de usuário, build ou configuração pessoal está incluído neste repositório.
+
+A produção atual foi projetada para hospedagem privada com um gateway autenticador confiável. O servidor usa os headers `oai-authenticated-user-id` e `oai-authenticated-user-email`, fornecidos pelo gateway do Sites. Esse gateway deve autenticar a requisição e remover quaisquer headers de identidade enviados pelo cliente. **Não publique o Worker diretamente na internet confiando nesses headers sem implementar um gateway equivalente ou outro mecanismo de autenticação verificado.** O repositório não cria contas, grants OAuth ou credenciais de produção.
+
+Para publicar como Site, registre seu próprio projeto e mantenha o `project_id` no arquivo local ignorado `.openai/hosting.json`. Outra hospedagem exige adaptar autenticação e o binding SQLite/D1. A antiga configuração Vercel que redirecionava todo tráfego para a demonstração upstream foi removida; não há publicação Vercel pronta nesta versão.
+
+## Modelo de dados
+
+- `src/lib/study/syllabus.json`: fonte integral fornecida pelo usuário.
+- `src/lib/study/catalog.ts`: nomes curtos de exibição, hierarquia e cálculo sobre folhas.
+- `study_progress`: chave composta `(owner_id, topic_id)`, estado e data de atualização.
+- IDs de tópico seguem `slug-da-materia:numero-do-topico`; itens coincidentes mantêm IDs estáveis.
+- `tasks` e `members`: tabelas anteriores preservadas, sem reset ou seed automático.
+
+Todas as consultas usam prepared statements. O servidor valida tópicos/booleanos, rejeita propriedade definida pelo cliente e bloqueia escritas de outra origem. As marcações só aparecem como salvas após confirmação do servidor; erros preservam o estado anterior.
+
+Migrations em `drizzle/` são incrementais. Não reescreva migrations já aplicadas. Para mudar o esquema, edite `db/schema.ts`, execute `npm run db:generate`, revise o SQL e aplique a nova migration. O catálogo é versionado no código; não há importador de editais pelo navegador nesta V1.
+
+## Conteúdo e validação
+
+Textos, acentos, números, hierarquia, cargo e notas foram mantidos como enviados, inclusive a redação original. Não houve conferência independente com o edital oficial. Percentuais e checkboxes ilustrativos do protótipo não foram importados.
+
+```sh
+npm run check:types
+npm run test:catalog
+npm run test:checkbox
+npm run build
+npm run db:migrate
+```
+
+O teste de catálogo valida as 16 matérias, 298 nós, 234 folhas, nomes, notas, cargo, níveis profundos e estados mistos. Os fluxos HTTP/SQLite também foram testados localmente: leitura, marcação de pais/filhos, desfazer marcações, isolamento por conta, falhas de armazenamento e persistência após desligar e reiniciar o processo. A revisão visual em navegador/dispositivo não pôde ser executada no ambiente utilizado.
+
+## Licença
+
+O template original segue a licença MIT, preservada em `LICENSE`, copyright Mohammed Arham Khan. As fontes e o helper de desenvolvimento preservam suas licenças. `docs/tcdf-reference/` contém a referência visual enviada.

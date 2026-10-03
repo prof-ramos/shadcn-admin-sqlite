@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edital Verticalizado — TCDF</title>
+  <style>
+    :root {
+      --canvas: #f7f8fa;
+      --surface: #ffffff;
+      --border: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text: #111827;
+      --muted: #6b7280;
+      --muted-2: #9ca3af;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: #eff6ff;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --sidebar: 232px;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--canvas); color: var(--text); }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--canvas);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .app { min-height: 100vh; }
+    .topbar {
+      height: 64px;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: var(--sidebar);
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      background: #111827;
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -.02em;
+    }
+
+    .brand-title { font-size: 14px; font-weight: 750; line-height: 1.15; }
+    .brand-subtitle { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    .topbar-context {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 18px;
+      padding-left: 18px;
+      border-left: 1px solid var(--border);
+    }
+
+    .shell { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); }
+
+    .sidebar {
+      min-height: calc(100vh - 64px);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 18px 14px;
+      position: sticky;
+      top: 64px;
+      align-self: start;
+    }
+
+    .nav-label {
+      color: var(--muted-2);
+      font-size: 10px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 0 10px;
+      margin: 6px 0 8px;
+    }
+
+    .nav { display: grid; gap: 4px; }
+    .nav-item {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 10px;
+      border: 0;
+      background: transparent;
+      color: #374151;
+      border-radius: 9px;
+      text-align: left;
+      width: 100%;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .nav-item:hover { background: #f9fafb; }
+    .nav-item.active { background: var(--accent-soft); color: var(--accent); }
+    .nav-item:focus-visible { outline: 3px solid rgba(37,99,235,.18); }
+
+    .nav-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .nav-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+    .soon { font-size: 10px; color: var(--muted-2); font-weight: 650; }
+
+    .main { min-width: 0; padding: 30px 32px 56px; }
+    .content { max-width: 1180px; margin: 0 auto; }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 750;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .065em;
+    }
+
+    h1 { font-size: clamp(25px, 3vw, 34px); letter-spacing: -.035em; margin: 7px 0 7px; line-height: 1.08; }
+    .lede { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; max-width: 700px; }
+
+    .hero-row { display: flex; justify-content: space-between; gap: 20px; align-items: end; }
+    .view-switch {
+      display: inline-flex;
+      padding: 3px;
+      background: #eef0f3;
+      border-radius: 10px;
+      gap: 2px;
+      flex: 0 0 auto;
+    }
+    .view-switch button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-weight: 650;
+    }
+    .view-switch button.active { background: white; color: var(--text); box-shadow: 0 1px 2px rgba(17,24,39,.08); }
+
+    .summary {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(170px, .55fr));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .summary-card { padding: 18px 20px; min-width: 0; }
+    .summary-card + .summary-card { border-left: 1px solid var(--border); }
+    .summary-label { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .summary-value { font-size: 26px; font-weight: 760; letter-spacing: -.035em; margin-top: 5px; }
+    .summary-note { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    .progress { height: 7px; border-radius: 999px; background: #edf0f3; overflow: hidden; margin-top: 12px; }
+    .progress > span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+
+    .section-tabs {
+      margin-top: 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-tab {
+      border: 1px solid var(--border);
+      background: white;
+      color: #4b5563;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .section-tab.active { border-color: #bfdbfe; background: var(--accent-soft); color: var(--accent); }
+
+    .section-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 26px 0 11px; }
+    .section-title { font-size: 13px; font-weight: 750; letter-spacing: -.01em; }
+    .section-meta { color: var(--muted); font-size: 11px; }
+
+    .subjects { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+    .subject-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 11px;
+      padding: 14px;
+      text-align: left;
+      transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    .subject-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 14px rgba(15,23,42,.05); transform: translateY(-1px); }
+    .subject-card.selected { border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(37,99,235,.07); }
+    .subject-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .subject-name { font-size: 13px; font-weight: 700; line-height: 1.35; }
+    .subject-pct { color: var(--muted); font-size: 12px; font-weight: 700; flex: 0 0 auto; }
+    .subject-detail { color: var(--muted); font-size: 11px; margin-top: 9px; }
+    .subject-card .progress { height: 5px; margin-top: 9px; }
+
+    .editor {
+      margin-top: 26px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .editor-head {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .editor-title { font-size: 17px; font-weight: 750; letter-spacing: -.015em; }
+    .editor-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .editor-progress { min-width: 180px; text-align: right; }
+    .editor-progress strong { font-size: 15px; }
+    .editor-progress small { color: var(--muted); font-size: 11px; display: block; margin-top: 2px; }
+
+    .topic { border-bottom: 1px solid #eef0f2; }
+    .topic:last-child { border-bottom: 0; }
+    .topic-row {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 13px 20px;
+    }
+    .topic-row.depth-1 { padding-left: 44px; background: #fcfcfd; }
+    .topic-row.depth-2 { padding-left: 68px; background: #fdfdfd; }
+    .topic-row:hover { background: #fafafa; }
+    .topic input { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--accent); }
+    .topic-text { font-size: 13px; line-height: 1.55; }
+    .topic-number { font-weight: 750; margin-right: 5px; color: #374151; }
+    .topic.completed .topic-text { color: #4b5563; }
+
+    .footer-note { color: var(--muted); font-size: 11px; margin-top: 14px; text-align: right; }
+
+    @media (max-width: 1080px) {
+      :root { --sidebar: 208px; }
+      .subjects { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .main { padding-left: 24px; padding-right: 24px; }
+    }
+
+    @media (max-width: 780px) {
+      .topbar { padding: 0 16px; }
+      .brand { min-width: auto; }
+      .topbar-context { display: none; }
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: static; min-height: 0; border-right: 0; border-bottom: 1px solid var(--border); padding: 10px 12px; }
+      .nav-label { display: none; }
+      .nav { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .nav-item { min-height: 38px; }
+      .main { padding: 22px 16px 44px; }
+      .hero-row { align-items: start; flex-direction: column; }
+      .summary { grid-template-columns: 1fr 1fr; }
+      .summary-card:first-child { grid-column: 1 / -1; }
+      .summary-card + .summary-card { border-left: 0; border-top: 1px solid var(--border); }
+      .summary-card:nth-child(3) { border-left: 1px solid var(--border); }
+      .subjects { grid-template-columns: 1fr; }
+      .editor-head { align-items: start; flex-direction: column; }
+      .editor-progress { min-width: 0; width: 100%; text-align: left; }
+      .topic-row { padding-left: 14px; padding-right: 14px; }
+      .topic-row.depth-1 { padding-left: 30px; }
+      .topic-row.depth-2 { padding-left: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">TC</div>
+        <div>
+          <div class="brand-title">Edital TCDF</div>
+          <div class="brand-subtitle">Acompanhamento de estudos</div>
+        </div>
+      </div>
+      <div class="topbar-context">Analista de Controle Externo · Analista de Administração Pública</div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="nav-label">Navegação</div>
+        <nav class="nav" aria-label="Navegação principal">
+          <button class="nav-item active" type="button">
+            <span class="nav-left">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-3H4v3Zm10-13h6V4h-6v3Z"/></svg>
+              Dashboard
+            </span>
+          </button>
+          <button class="nav-item" type="button">
+            <span class="nav-left">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg>
+              Edital Verticalizado
+            </span>
+          </button>
+          <button class="nav-item" type="button" aria-disabled="true">
+            <span class="nav-left">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h10a2 2 0 0 1 2 2v14l-7-3-7 3V5a2 2 0 0 1 2-2Z"/></svg>
+              Questões e Simulados
+            </span>
+            <span class="soon">Em breve</span>
+          </button>
+          <button class="nav-item" type="button" aria-disabled="true">
+            <span class="nav-left">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16M7 16l10-10 2 2-10 10H7v-2Z"/></svg>
+              Discursivas
+            </span>
+            <span class="soon">Em breve</span>
+          </button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="content">
+          <div class="hero-row">
+            <div>
+              <div class="eyebrow">Dashboard</div>
+              <h1>Edital verticalizado</h1>
+              <p class="lede">Acompanhe o avanço por matéria e marque cada tópico conforme o estudo. Pais refletem automaticamente o estado dos subtópicos.</p>
+            </div>
+            <div class="view-switch" aria-label="Visualização">
+              <button class="active" type="button">Visão geral</button>
+              <button type="button">Matéria</button>
+            </div>
+          </div>
+
+          <section class="summary" aria-label="Resumo do progresso">
+            <div class="summary-card">
+              <div class="summary-label">Progresso geral</div>
+              <div class="summary-value" id="overallPercent">28%</div>
+              <div class="progress"><span id="overallBar" style="width:28%"></span></div>
+              <div class="summary-note">Calculado apenas sobre itens-folha do edital.</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Itens estudados</div>
+              <div class="summary-value" id="studiedCount">66</div>
+              <div class="summary-note">de 234 itens</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Matérias</div>
+              <div class="summary-value">16</div>
+              <div class="summary-note">3 seções do edital</div>
+            </div>
+          </section>
+
+          <div class="section-tabs">
+            <button class="section-tab active" type="button">Todas</button>
+            <button class="section-tab" type="button">Básicos</button>
+            <button class="section-tab" type="button">Específicos</button>
+            <button class="section-tab" type="button">Especializados</button>
+          </div>
+
+          <div class="section-title-row">
+            <div class="section-title">Conhecimentos básicos</div>
+            <div class="section-meta">5 matérias</div>
+          </div>
+          <div class="subjects">
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Português</div><div class="subject-pct">38%</div></div><div class="progress"><span style="width:38%"></span></div><div class="subject-detail">5 de 13 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">LODF</div><div class="subject-pct">20%</div></div><div class="progress"><span style="width:20%"></span></div><div class="subject-detail">1 de 5 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Política para Mulheres</div><div class="subject-pct">33%</div></div><div class="progress"><span style="width:33%"></span></div><div class="subject-detail">1 de 3 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Primeiros Socorros</div><div class="subject-pct">0%</div></div><div class="progress"><span style="width:0%"></span></div><div class="subject-detail">0 de 1 item estudado</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">RLM e MF</div><div class="subject-pct">25%</div></div><div class="progress"><span style="width:25%"></span></div><div class="subject-detail">2 de 8 itens estudados</div></button>
+          </div>
+
+          <div class="section-title-row">
+            <div class="section-title">Conhecimentos específicos</div>
+            <div class="section-meta">6 matérias</div>
+          </div>
+          <div class="subjects">
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Lei Orgânica TCDF</div><div class="subject-pct">17%</div></div><div class="progress"><span style="width:17%"></span></div><div class="subject-detail">1 de 6 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Direito Constitucional</div><div class="subject-pct">41%</div></div><div class="progress"><span style="width:41%"></span></div><div class="subject-detail">7 de 17 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Direito Previdenciário</div><div class="subject-pct">17%</div></div><div class="progress"><span style="width:17%"></span></div><div class="subject-detail">1 de 6 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Direito Civil</div><div class="subject-pct">38%</div></div><div class="progress"><span style="width:38%"></span></div><div class="subject-detail">3 de 8 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Direito Tributário</div><div class="subject-pct">31%</div></div><div class="progress"><span style="width:31%"></span></div><div class="subject-detail">4 de 13 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Dados, Estatística e IA</div><div class="subject-pct">27%</div></div><div class="progress"><span style="width:27%"></span></div><div class="subject-detail">3 de 11 itens estudados</div></button>
+          </div>
+
+          <div class="section-title-row">
+            <div class="section-title">Conhecimentos especializados</div>
+            <div class="section-meta">5 matérias</div>
+          </div>
+          <div class="subjects">
+            <button class="subject-card selected" type="button"><div class="subject-top"><div class="subject-name">Direito Administrativo</div><div class="subject-pct">32%</div></div><div class="progress"><span style="width:32%"></span></div><div class="subject-detail">14 de 44 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">AFO</div><div class="subject-pct">25%</div></div><div class="progress"><span style="width:25%"></span></div><div class="subject-detail">7 de 28 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Adm Geral e Pública</div><div class="subject-pct">29%</div></div><div class="progress"><span style="width:29%"></span></div><div class="subject-detail">9 de 31 itens estudados</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">RJU DF</div><div class="subject-pct">0%</div></div><div class="progress"><span style="width:0%"></span></div><div class="subject-detail">0 de 1 item estudado</div></button>
+            <button class="subject-card" type="button"><div class="subject-top"><div class="subject-name">Contratos</div><div class="subject-pct">18%</div></div><div class="progress"><span style="width:18%"></span></div><div class="subject-detail">2 de 11 itens estudados</div></button>
+          </div>
+
+          <section class="editor" aria-label="Direito Administrativo">
+            <div class="editor-head">
+              <div>
+                <div class="editor-title">Direito Administrativo</div>
+                <div class="editor-sub">Conhecimentos especializados · visualização da hierarquia real do edital</div>
+              </div>
+              <div class="editor-progress">
+                <strong id="subjectPercent">32%</strong>
+                <small id="subjectCount">14 de 44 itens estudados</small>
+                <div class="progress"><span id="subjectBar" style="width:32%"></span></div>
+              </div>
+            </div>
+
+            <div id="topics">
+              <div class="topic completed" data-leaf="false">
+                <label class="topic-row">
+                  <input type="checkbox" class="parent-check" checked />
+                  <span class="topic-text"><span class="topic-number">1.</span>Estado, governo e administração pública.</span>
+                </label>
+                <div class="topic completed"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" checked /><span class="topic-text"><span class="topic-number">1.1</span>Conceitos.</span></label></div>
+                <div class="topic completed"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" checked /><span class="topic-text"><span class="topic-number">1.2</span>Elementos.</span></label></div>
+              </div>
+
+              <div class="topic" data-leaf="false">
+                <label class="topic-row">
+                  <input type="checkbox" class="parent-check" />
+                  <span class="topic-text"><span class="topic-number">4.</span>Agentes públicos.</span>
+                </label>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.1</span>Disposições constitucionais aplicáveis.</span></label></div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.2</span>Conceito.</span></label></div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.3</span>Espécies.</span></label></div>
+                <div class="topic" data-leaf="false">
+                  <label class="topic-row depth-1"><input type="checkbox" class="parent-check nested" /><span class="topic-text"><span class="topic-number">4.4</span>Cargo, emprego e função pública.</span></label>
+                  <div class="topic"><label class="topic-row depth-2"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.4.1</span>Provimento.</span></label></div>
+                  <div class="topic"><label class="topic-row depth-2"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.4.2</span>Vacância.</span></label></div>
+                  <div class="topic"><label class="topic-row depth-2"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.4.3</span>Efetividade, estabilidade e vitaliciedade.</span></label></div>
+                </div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.5</span>Remuneração.</span></label></div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.6</span>Direitos e deveres.</span></label></div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.7</span>Responsabilidades.</span></label></div>
+                <div class="topic"><label class="topic-row depth-1"><input type="checkbox" class="leaf-check" /><span class="topic-text"><span class="topic-number">4.8</span>Sindicância e processo administrativo disciplinar.</span></label></div>
+              </div>
+            </div>
+          </section>
+          <div class="footer-note">Protótipo visual · percentuais ilustrativos nesta tela</div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const topicRoots = Array.from(document.querySelectorAll('#topics > .topic[data-leaf="false"]'));
+
+    function descendants(parent) {
+      return Array.from(parent.querySelectorAll('.leaf-check'));
+    }
+
+    function directParentBlock(check) {
+      return check.closest('.topic[data-leaf="false"]');
+    }
+
+    function syncParent(block) {
+      if (!block) return;
+      const parent = block.querySelector(':scope > .topic-row .parent-check');
+      if (!parent) return;
+      const leaves = descendants(block);
+      const checked = leaves.filter(x => x.checked).length;
+      parent.checked = leaves.length > 0 && checked === leaves.length;
+      parent.indeterminate = checked > 0 && checked < leaves.length;
+      block.classList.toggle('completed', parent.checked);
+    }
+
+    function syncAllParents() {
+      const parents = Array.from(document.querySelectorAll('.topic[data-leaf="false"]')).reverse();
+      parents.forEach(syncParent);
+    }
+
+    document.querySelectorAll('.parent-check').forEach(check => {
+      check.addEventListener('change', () => {
+        const block = directParentBlock(check);
+        descendants(block).forEach(leaf => {
+          leaf.checked = check.checked;
+          leaf.closest('.topic').classList.toggle('completed', leaf.checked);
+        });
+        syncAllParents();
+      });
+    });
+
+    document.querySelectorAll('.leaf-check').forEach(check => {
+      check.addEventListener('change', () => {
+        check.closest('.topic').classList.toggle('completed', check.checked);
+        syncAllParents();
+      });
+    });
+
+    syncAllParents();
+  </script>
+</body>
+</html>

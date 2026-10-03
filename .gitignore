@@ -3,35 +3,50 @@
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
-.yarn/install-state.gz
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # testing
 /coverage
 
 # next.js
 /.next/
+/.vinext/
 /out/
-
-# production
-/build
 
 # misc
 .DS_Store
 *.pem
-*.sh
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# local env files
-.env*.local
+# env files (can opt-in for committing if needed)
+.env*
 
 # vercel
 .vercel
 
 # typescript
-*.tsbuildinfo
 next-env.d.ts
+/dist/
+/.wrangler/
+# Checkout-local execution profile and tool state; never publish them.
+/.sites-runtime/
+/.agents/
+/.codex/
+/outputs/
+/work/
+
+*.tsbuildinfo
+
+# Site identity is deliberately local; only the logical binding example is published.
+.openai/*
+!.openai/hosting.example.json

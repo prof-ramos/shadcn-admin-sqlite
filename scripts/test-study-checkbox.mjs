@@ -1,0 +1,14 @@
+import {build} from "esbuild";
+import {mkdirSync,readFileSync} from "node:fs";
+import {spawnSync} from "node:child_process";
+import {fileURLToPath} from "node:url";
+import assert from "node:assert/strict";
+const directory=new URL("../.sites-runtime/",import.meta.url);mkdirSync(directory,{recursive:true});
+const outfile=new URL("checkbox-regression.cjs",directory);
+await build({entryPoints:[fileURLToPath(new URL("./tests/checkbox-regression.tsx",import.meta.url))],outfile:fileURLToPath(outfile),bundle:true,platform:"node",format:"cjs",tsconfig:fileURLToPath(new URL("../tsconfig.json",import.meta.url))});
+const result=spawnSync(process.execPath,[fileURLToPath(outfile)],{stdio:"inherit"});if(result.status!==0)process.exit(result.status||1);
+const css=readFileSync(new URL("../src/app/(main)/dashboard/edital/_components/study.css",import.meta.url),"utf8");
+assert(css.includes('.tcdf-checkbox-control [data-slot=checkbox-indicator] {display:none!important}'));
+assert(css.includes('.tcdf-checkbox[data-study-status=partial] {background:#eff6ff'));
+assert(css.includes('.tcdf-checkbox[data-study-status=complete] {background:#2563eb'));
+console.log("PASS explicit partial/complete indicators use distinct styles.");
