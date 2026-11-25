@@ -4,15 +4,14 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
+import { THEME_MODE_OPTIONS, type ThemeMode } from "@/lib/preferences/theme";
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
-const THEME_CYCLE = ["light", "dark", "system"] as const;
+const THEME_CYCLE = THEME_MODE_OPTIONS.map((option) => option.value);
 
-const THEME_LABELS: Record<(typeof THEME_CYCLE)[number], string> = {
-  light: "claro",
-  dark: "escuro",
-  system: "sistema",
-};
+const THEME_LABELS = Object.fromEntries(
+  THEME_MODE_OPTIONS.map((option) => [option.value, option.label.toLowerCase()]),
+) as Record<ThemeMode, string>;
 
 export function ThemeSwitcher() {
   const { themeMode, setPreference } = usePreferencesStore(
