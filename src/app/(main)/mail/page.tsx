@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
-import { getValueFromCookie } from "@/server/server-actions";
+import type { Metadata } from "next";
 
 import { mails } from "./_components/data";
 import { MailComponent } from "./_components/mail";
-import { DEFAULT_MAIL_LAYOUT, MAIL_LAYOUT_COOKIE } from "./_components/mail-layout-config";
+import { MAIL_LAYOUT_COOKIE, parseMailLayout } from "./_components/mail-layout-config";
 
 export const metadata: Metadata = {
   title: "Cliente de e-mail open source com shadcn/ui",
@@ -16,11 +16,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const layoutCookie = await getValueFromCookie(MAIL_LAYOUT_COOKIE);
+  const cookieStore = await cookies();
+  const defaultLayout = parseMailLayout(cookieStore.get(MAIL_LAYOUT_COOKIE)?.value);
 
   return (
     <div className="h-dvh min-h-0 overflow-hidden">
-      <MailComponent mails={mails} defaultLayout={layoutCookie ? JSON.parse(layoutCookie) : [...DEFAULT_MAIL_LAYOUT]} />
+      <MailComponent mails={mails} defaultLayout={defaultLayout} />
     </div>
   );
 }

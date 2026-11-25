@@ -8,7 +8,7 @@ import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sideb
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
-import { getPreference } from "@/server/server-actions";
+import { getPreference } from "@/server/preferences";
 
 import { AccountSwitcher } from "./_components/header/account-switcher";
 import { GitHubRepositoriesMenu } from "./_components/header/github-repositories-menu";
