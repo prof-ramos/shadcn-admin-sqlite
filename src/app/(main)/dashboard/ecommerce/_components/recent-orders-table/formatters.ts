@@ -1,5 +1,3 @@
-import type React from "react";
-
 import type { OrderFilter } from "./schema";
 
 export function formatOrderCount(filter: OrderFilter, count: number) {
@@ -27,8 +25,4 @@ export function formatSelectedOrderCount(count: number) {
   const orderLabel = count === 1 ? "pedido" : "pedidos";
 
   return `${count.toLocaleString("pt-BR")} ${orderLabel} selecionado${count === 1 ? "" : "s"}`;
-}
-
-export function preventPaginationNavigation(event: React.MouseEvent<HTMLAnchorElement>) {
-  event.preventDefault();
 }

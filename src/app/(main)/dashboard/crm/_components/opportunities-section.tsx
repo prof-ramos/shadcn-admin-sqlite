@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import { getPageWindow, preventPaginationNavigation } from "@/lib/pagination";
 
 import { opportunitiesColumns } from "./opportunities-table/columns";
 import opportunitiesData from "./opportunities-table/data.json";
@@ -38,10 +39,6 @@ import { opportunitiesSchema } from "./opportunities-table/schema";
 export const stageOptions = ["Todos", "Proposta enviada", "Descoberta", "Negociação", "Qualificado"] as const;
 export const healthOptions = ["Todos", "Em dia", "Precisa de revisão", "Em risco", "Em pausa"] as const;
 const opportunities = opportunitiesSchema.parse(opportunitiesData);
-
-function preventPaginationNavigation(event: React.MouseEvent<HTMLAnchorElement>) {
-  event.preventDefault();
-}
 
 export function OpportunitiesSection() {
   const [rowSelection, setRowSelection] = React.useState({});
@@ -79,16 +76,7 @@ export function OpportunitiesSection() {
   const pageCount = table.getPageCount();
   const filteredOpportunityCount = table.getFilteredRowModel().rows.length;
   const visibleOpportunityCount = table.getRowModel().rows.length;
-  const pageNumbers = React.useMemo(() => {
-    if (pageCount <= 3) {
-      return Array.from({ length: pageCount }, (_, index) => index + 1);
-    }
-
-    if (currentPage <= 2) return [1, 2, 3];
-    if (currentPage >= pageCount - 1) return [pageCount - 2, pageCount - 1, pageCount];
-
-    return [currentPage - 1, currentPage, currentPage + 1];
-  }, [currentPage, pageCount]);
+  const pageNumbers = getPageWindow(currentPage, pageCount);
 
   return (
     <section>
