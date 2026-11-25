@@ -1,5 +1,4 @@
 "use client";
-import type { MouseEvent } from "react";
 
 import type { ReactTable } from "@tanstack/react-table";
 

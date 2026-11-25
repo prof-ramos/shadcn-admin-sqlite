@@ -69,6 +69,10 @@ em `(auth)`**; páginas institucionais e de erro ficam em `src/app/(external)/`,
 - Componentes compartilhados da aplicação: `src/components/`
 - Componentes locais do shadcn: `src/components/ui/`
 - Hooks e utilitários compartilhados: `src/hooks/` e `src/lib/`
+- Código só de servidor: `src/server/`. Leituras SSR (ex.: `getPreference`) usam `import "server-only"` e não são
+  Server Actions. Arquivos `"use server"` viram endpoints públicos: valide chave e valor de toda entrada.
+- Preferências: registry em `src/lib/preferences/preferences-config.ts`; opções (valor + rótulo pt-BR) em
+  `layout.ts`/`theme.ts`/`src/lib/fonts/font-options.ts`. Os loaders `next/font` ficam só em `fonts/registry.ts`.
 - Presets de tema: `src/styles/presets/`
 
 Mantenha um componente dentro da rota dele até que seja reutilizado por outra feature. Não mova código específico de tela para um diretório compartilhado preventivamente.
