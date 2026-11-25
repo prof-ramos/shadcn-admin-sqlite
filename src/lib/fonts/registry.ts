@@ -21,6 +21,8 @@ import {
 import { GeistPixelSquare } from "geist/font/pixel";
 import { GeistSerif } from "geist/font/serif/variable";
 
+import type { FontKey } from "./font-options";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -108,94 +110,30 @@ const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
 });
 
-export const fontRegistry = {
-  geist: {
-    label: "Geist",
-    font: geist,
-  },
-  inter: {
-    label: "Inter",
-    font: inter,
-  },
-  notoSans: {
-    label: "Noto Sans",
-    font: notoSans,
-  },
-  nunitoSans: {
-    label: "Nunito Sans",
-    font: nunitoSans,
-  },
-  figtree: {
-    label: "Figtree",
-    font: figtree,
-  },
-  roboto: {
-    label: "Roboto",
-    font: roboto,
-  },
-  raleway: {
-    label: "Raleway",
-    font: raleway,
-  },
-  dmSans: {
-    label: "DM Sans",
-    font: dmSans,
-  },
-  publicSans: {
-    label: "Public Sans",
-    font: publicSans,
-  },
-  outfit: {
-    label: "Outfit",
-    font: outfit,
-  },
-  geistMono: {
-    label: "Geist Mono",
-    font: geistMono,
-  },
-  geistPixelSquare: {
-    label: "Geist Pixel Square",
-    font: GeistPixelSquare,
-  },
-  jetBrainsMono: {
-    label: "JetBrains Mono",
-    font: jetBrainsMono,
-  },
-  geistSerif: {
-    label: "Geist Serif",
-    font: GeistSerif,
-  },
-  notoSerif: {
-    label: "Noto Serif",
-    font: notoSerif,
-  },
-  robotoSlab: {
-    label: "Roboto Slab",
-    font: robotoSlab,
-  },
-  merriweather: {
-    label: "Merriweather",
-    font: merriweather,
-  },
-  lora: {
-    label: "Lora",
-    font: lora,
-  },
-  playfairDisplay: {
-    label: "Playfair Display",
-    font: playfairDisplay,
-  },
-} as const;
+/** Loaders `next/font` por chave; `satisfies` garante uma entrada para cada opção de fonte. */
+const fontLoaders = {
+  geist,
+  inter,
+  notoSans,
+  nunitoSans,
+  figtree,
+  roboto,
+  raleway,
+  dmSans,
+  publicSans,
+  outfit,
+  geistMono,
+  geistPixelSquare: GeistPixelSquare,
+  jetBrainsMono,
+  geistSerif: GeistSerif,
+  notoSerif,
+  robotoSlab,
+  merriweather,
+  lora,
+  playfairDisplay,
+} satisfies Record<FontKey, { variable: string }>;
 
-export type FontKey = keyof typeof fontRegistry;
-
-export const fontKeys = Object.keys(fontRegistry) as FontKey[];
-
-export const fontVars = Object.values(fontRegistry)
-  .map(({ font }) => font.variable)
+/** Classes de variáveis CSS de todas as fontes, aplicadas no `<body>`. */
+export const fontVars = Object.values(fontLoaders)
+  .map((font) => font.variable)
   .join(" ");
-
-export const fontOptions = fontKeys.map((key) => ({
-  key,
-  label: fontRegistry[key].label,
-}));

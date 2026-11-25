@@ -1,5 +1,4 @@
 "use client";
-import type { MouseEvent } from "react";
 
 import type { ReactTable } from "@tanstack/react-table";
 
@@ -16,28 +15,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { getPageWindow, preventPaginationNavigation } from "@/lib/pagination";
 
 import type { UserRow } from "./data";
-
-function preventPaginationNavigation(event: MouseEvent<HTMLAnchorElement>) {
-  event.preventDefault();
-}
-
-function getPageNumbers(currentPage: number, pageCount: number) {
-  if (pageCount <= 3) {
-    return Array.from({ length: pageCount }, (_, index) => index + 1);
-  }
-
-  if (currentPage <= 2) return [1, 2, 3];
-  if (currentPage >= pageCount - 1) return [pageCount - 2, pageCount - 1, pageCount];
-
-  return [currentPage - 1, currentPage, currentPage + 1];
-}
 
 export function UsersTable({ table }: { table: ReactTable<DataTableFeatures, UserRow> }) {
   const pageCount = Math.max(table.getPageCount(), 1);
   const currentPage = Math.min(table.state.pagination.pageIndex + 1, pageCount);
-  const pageNumbers = getPageNumbers(currentPage, pageCount);
+  const pageNumbers = getPageWindow(currentPage, pageCount);
   const rowsPerPage = `${table.state.pagination.pageSize}`;
 
   return (

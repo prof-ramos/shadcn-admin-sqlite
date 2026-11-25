@@ -23,6 +23,7 @@ import {
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import { getPageWindow, preventPaginationNavigation } from "@/lib/pagination";
 
 import { columns } from "./columns";
 import type { Task } from "./data";
@@ -30,21 +31,6 @@ import { TasksToolbar } from "./tasks-toolbar";
 
 interface TasksProps {
   data: Task[];
-}
-
-function preventPaginationNavigation(event: React.MouseEvent<HTMLAnchorElement>) {
-  event.preventDefault();
-}
-
-function getPageNumbers(currentPage: number, pageCount: number) {
-  if (pageCount <= 3) {
-    return Array.from({ length: pageCount }, (_, index) => index + 1);
-  }
-
-  if (currentPage <= 2) return [1, 2, 3];
-  if (currentPage >= pageCount - 1) return [pageCount - 2, pageCount - 1, pageCount];
-
-  return [currentPage - 1, currentPage, currentPage + 1];
 }
 
 export function Tasks({ data }: TasksProps) {
@@ -79,7 +65,7 @@ export function Tasks({ data }: TasksProps) {
   const pageIndex = table.state.pagination.pageIndex;
   const pageCount = Math.max(table.getPageCount(), 1);
   const currentPage = Math.min(pageIndex + 1, pageCount);
-  const pageNumbers = getPageNumbers(currentPage, pageCount);
+  const pageNumbers = getPageWindow(currentPage, pageCount);
   const canPreviousPage = table.getCanPreviousPage();
   const canNextPage = table.getCanNextPage();
 

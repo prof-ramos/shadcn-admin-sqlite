@@ -11,7 +11,7 @@
  * Others are flexible and can use any persistence.
  */
 
-import { fontKeys } from "@/lib/fonts/registry";
+import { FONT_KEYS } from "@/lib/fonts/font-options";
 
 import {
   CONTENT_LAYOUT_VALUES,
@@ -68,7 +68,7 @@ export const PREFERENCE_REGISTRY = {
   }),
 
   font: definePreference({
-    values: fontKeys,
+    values: FONT_KEYS,
     defaultValue: "geist",
     persistence: "client-cookie",
     attribute: "data-font",
@@ -118,6 +118,15 @@ export function getPreferencePersistence(key: PreferenceKey): PreferencePersiste
 export const PREFERENCE_DEFAULTS = Object.fromEntries(
   PREFERENCE_KEYS.map((key) => [key, PREFERENCE_REGISTRY[key].defaultValue]),
 ) as PreferenceValueMap;
+
+export type PreferenceAttributes = Record<`data-${string}`, string>;
+
+/** Data-attributes do `<html>` para um conjunto de valores (usado no SSR e no boot script). */
+export function getPreferenceAttributes(values: PreferenceValueMap): PreferenceAttributes {
+  return Object.fromEntries(
+    PREFERENCE_KEYS.map((key) => [PREFERENCE_REGISTRY[key].attribute, values[key]]),
+  ) as PreferenceAttributes;
+}
 
 export function parsePreference<K extends PreferenceKey>(
   key: K,

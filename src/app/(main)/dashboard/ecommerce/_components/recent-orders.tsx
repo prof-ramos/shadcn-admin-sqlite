@@ -18,14 +18,11 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import { getPageWindow, preventPaginationNavigation } from "@/lib/pagination";
 
 import { recentOrdersColumns } from "./recent-orders-table/columns";
 import recentOrdersData from "./recent-orders-table/data.json";
-import {
-  formatOrderCount,
-  formatSelectedOrderCount,
-  preventPaginationNavigation,
-} from "./recent-orders-table/formatters";
+import { formatOrderCount, formatSelectedOrderCount } from "./recent-orders-table/formatters";
 import { type OrderFilter, type OrderRow, orderFilters } from "./recent-orders-table/schema";
 
 const recentOrders = recentOrdersData as OrderRow[];
@@ -65,16 +62,7 @@ export function RecentOrders() {
   const pageCount = table.getPageCount();
   const orderCountDescription =
     selectedOrderCount > 0 ? formatSelectedOrderCount(selectedOrderCount) : formatOrderCount(activeFilter, orderCount);
-  const pageNumbers = React.useMemo(() => {
-    if (pageCount <= 3) {
-      return Array.from({ length: pageCount }, (_, index) => index + 1);
-    }
-
-    if (currentPage <= 2) return [1, 2, 3];
-    if (currentPage >= pageCount - 1) return [pageCount - 2, pageCount - 1, pageCount];
-
-    return [currentPage - 1, currentPage, currentPage + 1];
-  }, [currentPage, pageCount]);
+  const pageNumbers = getPageWindow(currentPage, pageCount);
 
   return (
     <Card>

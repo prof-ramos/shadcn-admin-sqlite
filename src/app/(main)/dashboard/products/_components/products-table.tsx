@@ -19,6 +19,7 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/u
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { getPageWindow } from "@/lib/pagination";
 
 import type { Product } from "./data";
 
@@ -43,8 +44,7 @@ export function ProductsTable({
   const total = table.getFilteredRowModel().rows.length;
   const selected = table.getSelectedRowModel().rows.length;
   const pageCount = Math.max(1, table.getPageCount());
-  const pageStart = Math.max(0, Math.min(pageIndex - 2, pageCount - 5));
-  const pages = Array.from({ length: Math.min(5, pageCount) }, (_, index) => pageStart + index);
+  const pages = getPageWindow(pageIndex + 1, pageCount, 5).map((page) => page - 1);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col *:data-[slot=table-container]:min-h-0 *:data-[slot=table-container]:flex-1 *:data-[slot=table-container]:overflow-auto">
